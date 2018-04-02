@@ -4,7 +4,7 @@ import org.graphstream.graph.implementations.SingleGraph
 
 object Main {
 
-  import ShortestPathCalculator.{calculateShortestPath, closestNodeIds}
+  import ShortestPathCalculator.{calculateShortestPath, closestNodeIds, pathLength}
 
   implicit val graph: SingleGraph = {
     val graph = new SingleGraph("map")
@@ -23,10 +23,12 @@ object Main {
     val Seq(startId, waypointId, endId) =
       closestNodeIds(activeNodes, Seq(start, waypoint, end))
 
-    calculateShortestPath(startId, waypointId, "rgb(255,0,0)")
-    calculateShortestPath(waypointId, endId, "rgb(255,0,0)")
+    val path1 = calculateShortestPath(startId, waypointId, "rgb(255,0,0)")
+    val path2 = calculateShortestPath(waypointId, endId, "rgb(255,0,0)")
+    println(s"Length of first route: ${pathLength(path1) + pathLength(path2)}m")
 
-    calculateShortestPath(startId, endId, "rgb(0,0,255)")
+    val path3 = calculateShortestPath(startId, endId, "rgb(0,0,255)")
+    println(s"Length of second route: ${pathLength(path3)}m")
 
     graph.display(false)
   }

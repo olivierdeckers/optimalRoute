@@ -31,9 +31,10 @@ object ShortestPathCalculator {
   }
 
   /**
-    * Calculate shortest path using A* and visualise it on the graph
+    * Calculate shortest path using A* and visualise it on the graph.
+    * @return The length of the path in meters
     */
-  def calculateShortestPath(startNodeId: String, endNodeId: String, color: String)(implicit graph: SingleGraph): Unit = {
+  def calculateShortestPath(startNodeId: String, endNodeId: String, color: String)(implicit graph: SingleGraph): Path = {
     graph.getNode[GraphNode](startNodeId).setAttribute("ui.style", "fill-color: rgb(0,255,0);")
     graph.getNode[GraphNode](endNodeId).setAttribute("ui.style", "fill-color: rgb(255,0,0);")
 
@@ -41,12 +42,10 @@ object ShortestPathCalculator {
     aStar.setCosts(new DistanceCosts)
     aStar.compute(startNodeId, endNodeId)
     val path = aStar.getShortestPath
-    if (path != null) {
-      path.getEdgePath.asScala.foreach(edge => {
-        edge.setAttribute("ui.style", s"fill-color: $color;size:5px;z-index:999;")
-      })
-      println(s"pathLength: ${pathLength(path)}")
-    }
+    path.getEdgePath.asScala.foreach(edge => {
+      edge.setAttribute("ui.style", s"fill-color: $color;size:5px;z-index:999;")
+    })
+    path
   }
 
   def pathLength(path: Path): Double = {
